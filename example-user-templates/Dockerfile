@@ -1,4 +1,4 @@
-FROM centos:7
+FROM centos:6
 
 MAINTAINER "Fermi LAT Collaboration"
 
@@ -22,12 +22,11 @@ RUN curl -s -L https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_6
   bash miniconda.sh -b -p ${HOME}/miniconda && \
   rm miniconda.sh && \
   export PATH=${HOME}/miniconda/bin:$PATH && \
-  conda install --yes -c conda-forge -c fermi_dev_externals ape
+  conda install --yes -c conda-forge -c fermi_dev_externals fermitools
 
 RUN echo "export PATH=${HOME}/miniconda/bin:$PATH" >> ${HOME}/.bashrc
 
 # RUN ${HOME}/miniconda/bin/conda install --yes -c conda-forge -c fermi_dev_externals WHATEVER_WE_NAME_SCIENCETOOLS!!!!!
 # RUN ${HOME}/miniconda/bin/conda install --yes -c conda-forge -c fermi_dev_externals ape
-
 
 CMD [ "/bin/bash" ]
