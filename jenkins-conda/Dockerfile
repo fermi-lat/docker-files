@@ -21,10 +21,14 @@ yum clean all
 
 RUN curl -s -L https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh > miniconda.sh && \
   bash miniconda.sh -b -p /miniconda && \
-  chmod -R a+rwx /miniconda && \
-  chown -R nobody:nobody /miniconda && \
   rm miniconda.sh
 
-RUN echo "export PATH=/miniconda/bin:$PATH" >> ${HOME}/.bashrc
+RUN mkdir -p /.conda/pkgs && \
+  touch /.conda/pkgs/urls.txt
+
+RUN chmod -R a+rwx /miniconda /.conda && \
+  chown -R nobody:nobody /miniconda /.conda
+
+ENV PATH "/miniconda/bin:$PATH"
 
 CMD [ "/bin/bash" ]
