@@ -1,6 +1,7 @@
 FROM centos:6
 
-MAINTAINER "Fermi LAT Collaboration"
+LABEL maintainer.name="Fermi LAT Collaboration" \
+      maintainer.email="fermihelp@milkyway.gsfc.nasa.gov"
 
 RUN yum update -y && \
     yum install -y \
@@ -28,6 +29,10 @@ RUN mkdir -p /.conda/pkgs && \
 
 RUN chmod -R a+rwx /miniconda /.conda && \
   chown -R nobody:nobody /miniconda /.conda
+
+# RUN git config --global user.email "fermihelp@milkyway.gsfc.nasa.gov" && \
+#     git config --global user.name  "Fermi LAT Collaboration"
+COPY .gitconfig /.gitconfig
 
 ENV PATH "/miniconda/bin:$PATH"
 
