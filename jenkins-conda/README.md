@@ -6,7 +6,7 @@ IMPORTANT NOTE. This mounts the present working directory as the home, and is wr
 You can lose data that is in this directory if you delete it in the container. This was done to match the way
 Jenkins runs docker containers.
 
-Run as jenkins runs: `docker run --rm -it -u ${UID}:${GID} -w /home/jenkins -v `pwd`:/home/jenkins fssc/jenkins-conda:`
+Run as jenkins runs: `docker run --rm -it -u ${UID}:${GID} -w /home/jenkins -v $(pwd):/home/jenkins fssc/jenkins-conda:latest`
 
 `git clone https://github.com/fermi-lat/ScienceTools-conda-recipe.git`
 
