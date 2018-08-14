@@ -1,5 +1,0 @@
-#!/bin/bash -i
-export HOME=$(pwd)
-. scl_source enable devtoolset-2
-export PATH=/miniconda/bin:$PATH
-exec "$@"

@@ -1,11 +1,12 @@
-FROM centos:6
+FROM centos:7
 
 LABEL maintainer.name="Fermi LAT Collaboration" \
       maintainer.email="fermihelp@milkyway.gsfc.nasa.gov"
 
 RUN yum update -y && \
-    yum install -y \
+    yum install -y --setopt=tsflags=nodocs \
         bzip2 \
+        centos-release-scl \
         make \
         mesa-libGL-devel \
         libXext-devel \
@@ -15,22 +16,14 @@ RUN yum update -y && \
         patch \
         sudo \
         tar \
-        which && \
-yum clean all
-
-# Install devtoolset 2.
-RUN yum update -y && \
-    yum install -y \
-        centos-release-scl \
+        tini \
+        which \
         yum-utils && \
-    yum-config-manager --add-repo http://people.centos.org/tru/devtools-2/devtools-2.repo && \
+    rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-SCLo && \
     yum update -y && \
-    yum install -y \
-        devtoolset-2-binutils \
-        devtoolset-2-gcc \
-        devtoolset-2-gcc-gfortran \
-        devtoolset-2-gcc-c++ && \
-yum clean all
+    yum install -y --setopt=tsflags=nodocs \
+        devtoolset-7 && \
+    yum clean all
 
 RUN curl -s -L \
     https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh > \
@@ -42,20 +35,27 @@ RUN curl -s -L \
     anaconda-client \
     git \
     jinja2 \
-    setuptools \
-    toolchain \
-    toolchain_c_linux-64 \
-    toolchain_cxx_linux-64 \
-    toolchain_fort_linux-64 -y && \
+    setuptools && \
   /miniconda/bin/conda clean -tipsy && \
   mkdir -p /.conda/pkgs && \
   touch /.conda/pkgs/urls.txt && \
-  chmod -R a+rwx /miniconda /.conda && \
-  chown -R nobody:nobody /miniconda /.conda
+  chmod -R a+rwx  /miniconda /.conda && \
+  chown -R nobody:nobody  /miniconda /.conda
+
+RUN mkdir -p /home/jenkins && \
+  chmod -R a+rwx /home/jenkins && \
+  chown -R nobody:nobody /home/jenkins
+
+
+ENV PATH /miniconda/bin:/opt/rh/devtoolset-7/root/usr/bin:$PATH
+ENV HOME /home/jenkins
+ENV PERL5LIB=/opt/rh/devtoolset-7/root//usr/lib64/perl5/vendor_perl:/opt/rh/devtoolset-7/root/usr/lib/perl5:/opt/rh/devtoolset-7/root//usr/share/perl5/vendor_perl
+ENV X_SCLS=devtoolset-7
+ENV PCP_DIR=/opt/rh/devtoolset-7/root
+ENV LD_LIBRARY_PATH=/opt/rh/devtoolset-7/root/usr/lib64:/opt/rh/devtoolset-7/root/usr/lib
+ENV PYTHONPATH=/opt/rh/devtoolset-7/root/usr/lib64/python2.7/site-packages:/opt/rh/devtoolset-7/root/usr/lib/python2.7/site-packages
+ENV INFOPATH=/opt/rh/devtoolset-7/root/usr/share/info
 
 COPY .gitconfig /.gitconfig
-COPY entrypoint /opt/fermi/bin/entrypoint
-
-ENTRYPOINT ["/opt/fermi/bin/entrypoint"]
 
 CMD [ "/bin/bash" ]
