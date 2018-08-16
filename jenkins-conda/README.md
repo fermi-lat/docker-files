@@ -7,7 +7,7 @@ You can lose data that is in this directory if you delete it in the container. T
 Jenkins runs docker containers.
 
 Run as jenkins runs: 
-`docker run --rm -u ${UID}:${GID} -w /home/jenkins -v $(pwd):/home/jenkins fssc/jenkins-conda:populated0 cat`
+`docker run --rm -t -d -u ${UID}:${GID} -w /home/jenkins -v $(pwd):/home/jenkins fssc/jenkins-conda:populated0 cat`
 
 Get the container id and `exec` all the things.
 
